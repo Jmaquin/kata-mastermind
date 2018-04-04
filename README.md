@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Jmaquin/kata-mastermind.svg?branch=master)](https://travis-ci.org/Jmaquin/kata-mastermind)
+[![codecov](https://codecov.io/gh/Jmaquin/kata-mastermind/branch/master/graph/badge.svg)](https://codecov.io/gh/Jmaquin/kata-mastermind)
 # kata-mastermind
 
 ## Le Mastermind (implémentation)
