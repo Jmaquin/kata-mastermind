@@ -1,9 +1,13 @@
 package com.enums;
 
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@RunWith(JUnitParamsRunner.class)
 public class ColorTest {
 
     @Test
@@ -27,5 +31,39 @@ public class ColorTest {
         assertThat(Color.ORANGE.getValue()).isEqualTo("O");
         assertThat(Color.VERT.getValue()).isEqualTo("V");
         assertThat(Color.NOIR.getValue()).isEqualTo("N");
+    }
+
+    @Test
+    @Parameters
+    public void should_return_enum_value(final String code, final Color color) {
+        //Given
+
+        //When
+        Color result = Color.getEnum(code);
+
+        //Then
+        assertThat(result).isEqualTo(color);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void should_throw_exception_when_enum_value_not_found() {
+        //Given
+
+        //When
+        String anInvalidCode = "P";
+        Color.getEnum(anInvalidCode);
+
+        //Then
+    }
+
+    private Object[] parametersForShould_return_enum_value() {
+        return new Object[][]{
+                {"B", Color.BLEU},
+                {"J", Color.JAUNE},
+                {"N", Color.NOIR},
+                {"O", Color.ORANGE},
+                {"R", Color.ROUGE},
+                {"V", Color.VERT},
+        };
     }
 }
