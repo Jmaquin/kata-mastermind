@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @EqualsAndHashCode
 @AllArgsConstructor
-class Pawn {
+public class Pawn {
     @Getter
     private Color color;
 }
