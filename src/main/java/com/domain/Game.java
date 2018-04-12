@@ -14,7 +14,7 @@ public class Game {
     @Setter
     private List<Pawn> computerPawns = new ArrayList<>();
     @Getter
-    private UserPawns userPawns = new UserPawns();
+    private PawnsSelection userPawns = new PawnsSelection();
     @Getter
     private List<State> states = new ArrayList<>();
 
@@ -40,7 +40,7 @@ public class Game {
                 lastState.getActiveRound() + 1, lastState.getMaxRounds());
         states.add(
                 newState);
-        userPawns = new UserPawns();
+        userPawns = new PawnsSelection();
     }
 
     private boolean isGameFinished() {
@@ -57,7 +57,7 @@ public class Game {
         return states.get(states.size() - 1);
     }
 
-    private boolean validateUserCombination(UserPawns userPawns) {
+    private boolean validateUserCombination(PawnsSelection userPawns) {
         return computerPawns.equals(userPawns);
     }
 

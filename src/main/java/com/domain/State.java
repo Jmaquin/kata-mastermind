@@ -6,7 +6,7 @@ import lombok.Getter;
 @AllArgsConstructor
 class State {
     @Getter
-    private UserPawns userPawns;
+    private PawnsSelection userPawns;
     @Getter
     private int truePawns;
     @Getter
