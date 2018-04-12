@@ -12,7 +12,7 @@ import java.util.List;
 public class Game {
     @Getter
     @Setter
-    private List<Pawn> computerPawns = new ArrayList<>();
+    private PawnsSelection computerPawns = new PawnsSelection();
     @Getter
     private PawnsSelection userPawns = new PawnsSelection();
     @Getter

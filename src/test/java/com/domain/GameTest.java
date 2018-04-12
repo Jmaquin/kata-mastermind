@@ -128,7 +128,8 @@ public class GameTest {
     public void should_give_true_and_partially_true_pawns(final Color computerColor1, final Color computerColor2, final Color computerColor3, final Color computerColor4, final String userLetter1, final String userLetter2, final String userLetter3, final String userLetter4, final int truePawns, final int partiallyTruePawns) {
         //Given
         Game aGame = new Game(numberOfRounds);
-        aGame.setComputerPawns(new ArrayList<>());
+        //Reset computer selection to set pawns manually and allow tests
+        aGame.setComputerPawns(new PawnsSelection());
         aGame.getComputerPawns().add(new Pawn(computerColor1));
         aGame.getComputerPawns().add(new Pawn(computerColor2));
         aGame.getComputerPawns().add(new Pawn(computerColor3));
