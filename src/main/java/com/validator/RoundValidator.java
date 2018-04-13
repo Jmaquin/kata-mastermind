@@ -5,7 +5,7 @@ import io.vavr.control.Validation;
 
 import java.util.List;
 
-public class GameValidator {
+public class RoundValidator {
 
     public Validation<String, String> validateRound(List<Pawn> computerPawns, List<Pawn> userPawns) {
         return Validation

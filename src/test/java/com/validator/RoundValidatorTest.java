@@ -11,9 +11,9 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class GameValidatorTest {
+public class RoundValidatorTest {
 
-    private GameValidator gameValidator = new GameValidator();
+    private RoundValidator roundValidator = new RoundValidator();
 
     @Test
     public void should_return_valid_when_user_find_correct_combination() {
@@ -26,7 +26,7 @@ public class GameValidatorTest {
         List<Pawn> aCorrectUserCombination = new ArrayList<>(aComputerPawnList);
 
         //When
-        Validation<String, String> result = gameValidator.validateRound(aComputerPawnList, aCorrectUserCombination);
+        Validation<String, String> result = roundValidator.validateRound(aComputerPawnList, aCorrectUserCombination);
 
         //Then
         assertThat(result.isValid()).isEqualTo(true);
@@ -45,7 +45,7 @@ public class GameValidatorTest {
         aComputerPawnList.forEach(pawn -> aNotCorrectUserCombination.add(new Pawn(pawn.getColor().next())));
 
         //When
-        Validation<String, String> result = gameValidator.validateRound(aComputerPawnList, aNotCorrectUserCombination);
+        Validation<String, String> result = roundValidator.validateRound(aComputerPawnList, aNotCorrectUserCombination);
 
         //Then
         assertThat(result.isInvalid()).isEqualTo(true);
@@ -64,7 +64,7 @@ public class GameValidatorTest {
         aNotCompleteUserCombination.add(new Pawn(Color.ROUGE));
 
         //When
-        Validation<String, String> result = gameValidator.validateRound(aComputerPawnList, aNotCompleteUserCombination);
+        Validation<String, String> result = roundValidator.validateRound(aComputerPawnList, aNotCompleteUserCombination);
 
         //Then
         assertThat(result.isInvalid()).isEqualTo(true);
