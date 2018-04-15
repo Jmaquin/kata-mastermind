@@ -8,7 +8,7 @@ class Round {
     @Getter
     private PawnsSelection userPawns;
     @Getter
-    private int truePawns;
+    private int correctlyPlacedPawns;
     @Getter
-    private int partiallyTruePawns;
+    private int misplacedPawns;
 }

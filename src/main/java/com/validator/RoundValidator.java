@@ -1,14 +1,12 @@
 package com.validator;
 
 import com.Exception.PawnsSelectionUncompletedException;
-import com.domain.Pawn;
+import com.domain.PawnsSelection;
 import io.vavr.control.Validation;
-
-import java.util.List;
 
 public class RoundValidator {
 
-    Validation<String, String> validateRound(List<Pawn> computerPawns, List<Pawn> userPawns) throws PawnsSelectionUncompletedException {
+    public Validation<String, String> validateRound(PawnsSelection computerPawns, PawnsSelection userPawns) throws PawnsSelectionUncompletedException {
         if (userPawns.size() < 4)
             throw new PawnsSelectionUncompletedException("User selection is not complete");
         else

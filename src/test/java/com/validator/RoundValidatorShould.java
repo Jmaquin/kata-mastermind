@@ -2,16 +2,13 @@ package com.validator;
 
 import com.Exception.PawnsSelectionUncompletedException;
 import com.domain.Pawn;
+import com.domain.PawnsSelection;
 import com.enums.Color;
 import io.vavr.control.Validation;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class RoundValidatorShould {
@@ -24,12 +21,13 @@ public class RoundValidatorShould {
     @Test
     public void return_valid_when_user_find_correct_combination() throws PawnsSelectionUncompletedException {
         //Given
-        List<Pawn> aComputerPawnList = asList(
-                new Pawn(Color.getRandomColor()),
-                new Pawn(Color.getRandomColor()),
-                new Pawn(Color.getRandomColor()),
-                new Pawn(Color.getRandomColor()));
-        List<Pawn> aCorrectUserCombination = new ArrayList<>(aComputerPawnList);
+        PawnsSelection aComputerPawnList = new PawnsSelection();
+        aComputerPawnList.add(new Pawn(Color.getRandomColor()));
+        aComputerPawnList.add(new Pawn(Color.getRandomColor()));
+        aComputerPawnList.add(new Pawn(Color.getRandomColor()));
+        aComputerPawnList.add(new Pawn(Color.getRandomColor()));
+        PawnsSelection aCorrectUserCombination = new PawnsSelection();
+        aCorrectUserCombination.addAll(aComputerPawnList);
 
         //When
         Validation<String, String> result = roundValidator.validateRound(aComputerPawnList, aCorrectUserCombination);
@@ -42,12 +40,12 @@ public class RoundValidatorShould {
     @Test
     public void return_invalid_when_user_does_not_find_correct_combination() throws PawnsSelectionUncompletedException {
         //Given
-        List<Pawn> aComputerPawnList = asList(
-                new Pawn(Color.getRandomColor()),
-                new Pawn(Color.getRandomColor()),
-                new Pawn(Color.getRandomColor()),
-                new Pawn(Color.getRandomColor()));
-        List<Pawn> aNotCorrectUserCombination = new ArrayList<>();
+        PawnsSelection aComputerPawnList = new PawnsSelection();
+        aComputerPawnList.add(new Pawn(Color.getRandomColor()));
+        aComputerPawnList.add(new Pawn(Color.getRandomColor()));
+        aComputerPawnList.add(new Pawn(Color.getRandomColor()));
+        aComputerPawnList.add(new Pawn(Color.getRandomColor()));
+        PawnsSelection aNotCorrectUserCombination = new PawnsSelection();
         aComputerPawnList.forEach(pawn -> aNotCorrectUserCombination.add(new Pawn(pawn.getColor().next())));
 
         //When
@@ -61,12 +59,12 @@ public class RoundValidatorShould {
     @Test
     public void throw_exception_when_user_combination_is_not_complete() throws PawnsSelectionUncompletedException {
         //Given
-        List<Pawn> aComputerPawnList = asList(
-                new Pawn(Color.getRandomColor()),
-                new Pawn(Color.getRandomColor()),
-                new Pawn(Color.getRandomColor()),
-                new Pawn(Color.getRandomColor()));
-        List<Pawn> aNotCompleteUserCombination = new ArrayList<>();
+        PawnsSelection aComputerPawnList = new PawnsSelection();
+        aComputerPawnList.add(new Pawn(Color.getRandomColor()));
+        aComputerPawnList.add(new Pawn(Color.getRandomColor()));
+        aComputerPawnList.add(new Pawn(Color.getRandomColor()));
+        aComputerPawnList.add(new Pawn(Color.getRandomColor()));
+        PawnsSelection aNotCompleteUserCombination = new PawnsSelection();
         aNotCompleteUserCombination.add(new Pawn(Color.ROUGE));
 
         //When

@@ -13,7 +13,7 @@ public class Rounds extends ArrayList<Round> {
     private int maxSize;
 
     /**
-     * Unckecked exception is thrown because we don't want to add more than four elements and throw a checked exception is not possible when overriding add method
+     * Unckecked exception is thrown because we don't want to add more than maxSize elements and throw a checked exception is not possible when overriding add method
      *
      * @param round Round to be added to the list
      * @return true when round is added
@@ -32,7 +32,7 @@ public class Rounds extends ArrayList<Round> {
             return this.get(this.size() - 1);
     }
 
-    void createNextRound(PawnsSelection userPawns, int truePawns, int partiallyTruePawns) {
-        this.add(new Round(userPawns, truePawns, partiallyTruePawns));
+    void createNextRound(PawnsSelection userPawns, int correctlyPlacedPawns, int misplacedPawns) {
+        this.add(new Round(userPawns, correctlyPlacedPawns, misplacedPawns));
     }
 }

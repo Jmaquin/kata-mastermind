@@ -1,68 +1,49 @@
 package com.domain;
 
+import com.Exception.PawnsSelectionUncompletedException;
+import com.comparator.PawnSelectionsComparator;
 import com.enums.Color;
-import io.vavr.collection.Stream;
-import io.vavr.control.Try;
+import com.validator.RoundValidator;
+import io.vavr.control.Validation;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
+import static io.vavr.API.*;
 
-public class Game {
+@NoArgsConstructor
+class Game {
     @Getter
-    @Setter
     private PawnsSelection computerPawns = new PawnsSelection();
     @Getter
     private PawnsSelection userPawns = new PawnsSelection();
     @Getter
-    private List<State> states = new ArrayList<>();
+    private Rounds rounds;
+    private RoundValidator roundValidator = new RoundValidator();
+    private PawnSelectionsComparator pawnSelectionsComparator = new PawnSelectionsComparator();
 
     Game(int maxRounds) {
         for (int i = 0; i < 4; i++)
             computerPawns.add(new Pawn(Color.getRandomColor()));
-        states.add(new State(userPawns, 0, 0, 0, maxRounds));
+        this.rounds = new Rounds(maxRounds);
     }
 
-    public void addUserLetter(String letter) {
-        Try.of(() -> Color.getEnum(letter))
-                .map(color -> userPawns.add(new Pawn(color)));
+    void addUserPawn(Color color) {
+        userPawns.add(new Pawn(color));
     }
 
-    public void finishRound() {
-        State lastState = getLastState();
-        State newState = new State(
-                userPawns,
-                Stream.of(computerPawns.toArray()).zip(Stream.of(userPawns.toArray()))
-                        .count(pawnsTuple -> pawnsTuple._1.equals(pawnsTuple._2)),
-                Stream.of(computerPawns.toArray()).zip(Stream.of(userPawns.toArray()))
-                        .count(pawnsTuple -> userPawns.contains(pawnsTuple._1) && !pawnsTuple._1.equals(pawnsTuple._2)),
-                lastState.getActiveRound() + 1, lastState.getMaxRounds());
-        states.add(
-                newState);
-        userPawns = new PawnsSelection();
+    void removeUserPawn(int index) {
+        userPawns.remove(index);
     }
 
-    private boolean isGameFinished() {
-        State lastState = getLastState();
-        return !isLastRound() && validateUserCombination(lastState.getUserPawns());
-    }
+    void finishRound() throws PawnsSelectionUncompletedException {
+        Validation<String, String> validation = roundValidator.validateRound(computerPawns, userPawns);
 
-    public boolean isUserWinner() {
-        State lastState = getLastState();
-        return isGameFinished() && validateUserCombination(lastState.getUserPawns());
-    }
-
-    public State getLastState() {
-        return states.get(states.size() - 1);
-    }
-
-    private boolean validateUserCombination(PawnsSelection userPawns) {
-        return computerPawns.equals(userPawns);
-    }
-
-    private boolean isLastRound() {
-        State lastState = getLastState();
-        return lastState.getActiveRound() >= lastState.getMaxRounds();
+        Match(validation).of(
+                Case($(Validation.valid("User wins!")), () -> run(() -> rounds.createNextRound(userPawns, 4, 0))),
+                Case($(Validation.invalid("User selection does not match computer selection")), () -> run(() -> {
+                    PawnSelectionsComparison apply = pawnSelectionsComparator.apply(computerPawns, userPawns);
+                    rounds.createNextRound(userPawns, apply.getCorrectlyPlacedPawns(), apply.getMisplacedPawns());
+                }))
+        );
     }
 }
