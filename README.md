@@ -8,8 +8,7 @@ Pour référence, voir https://fr.wikipedia.org/wiki/Mastermind
 ## Résultat attendu:
 Une implémentation du jeu qui permette de jouer au mastermind avec les couleurs (rouge
 (R), jaune (J), bleu (B), orange (O), vert (V), noir (N)).
-Vous pouvez choisir le langage d’implémentation et l’interface graphique (d’une console JS
-à la fenêtre OpenGL, TOUT est possible).
+Vous pouvez choisir le langage d’implémentation.
 
 ## Règles du jeu:
 
