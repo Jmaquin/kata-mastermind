@@ -1,9 +1,12 @@
 package com.validator;
 
+import com.Exception.PawnsSelectionUncompletedException;
 import com.domain.Pawn;
 import com.enums.Color;
 import io.vavr.control.Validation;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,12 +14,15 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class RoundValidatorTest {
+public class RoundValidatorShould {
 
     private RoundValidator roundValidator = new RoundValidator();
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     @Test
-    public void should_return_valid_when_user_find_correct_combination() {
+    public void return_valid_when_user_find_correct_combination() throws PawnsSelectionUncompletedException {
         //Given
         List<Pawn> aComputerPawnList = asList(
                 new Pawn(Color.getRandomColor()),
@@ -34,7 +40,7 @@ public class RoundValidatorTest {
     }
 
     @Test
-    public void should_return_invalid_when_user_does_not_find_correct_combination() {
+    public void return_invalid_when_user_does_not_find_correct_combination() throws PawnsSelectionUncompletedException {
         //Given
         List<Pawn> aComputerPawnList = asList(
                 new Pawn(Color.getRandomColor()),
@@ -53,7 +59,7 @@ public class RoundValidatorTest {
     }
 
     @Test
-    public void should_return_invalid_when_user_combination_is_not_complete() {
+    public void throw_exception_when_user_combination_is_not_complete() throws PawnsSelectionUncompletedException {
         //Given
         List<Pawn> aComputerPawnList = asList(
                 new Pawn(Color.getRandomColor()),
@@ -64,10 +70,10 @@ public class RoundValidatorTest {
         aNotCompleteUserCombination.add(new Pawn(Color.ROUGE));
 
         //When
-        Validation<String, String> result = roundValidator.validateRound(aComputerPawnList, aNotCompleteUserCombination);
+        thrown.expect(PawnsSelectionUncompletedException.class);
+        thrown.expectMessage("User selection is not complete");
+        roundValidator.validateRound(aComputerPawnList, aNotCompleteUserCombination);
 
         //Then
-        assertThat(result.isInvalid()).isEqualTo(true);
-        assertThat(result.getError()).isEqualTo("User selection is not complete");
     }
 }
