@@ -1,10 +1,12 @@
 package com.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+@AllArgsConstructor
 class Round {
     @Getter
-    private PawnsSelection userPawns = new PawnsSelection();
+    private PawnsSelection userPawns;
     @Getter
     private int truePawns;
     @Getter
