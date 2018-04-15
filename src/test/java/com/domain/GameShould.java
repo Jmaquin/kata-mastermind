@@ -1,10 +1,15 @@
 package com.domain;
 
 import com.Exception.EmptyRoundListException;
+import com.Exception.GameAlreadyFinishedException;
 import com.Exception.PawnsSelectionUncompletedException;
 import com.comparator.PawnSelectionsComparator;
 import com.enums.Color;
+import com.enums.State;
+import com.enums.Winner;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -22,6 +27,9 @@ public class GameShould {
     @Mock
     private PawnSelectionsComparator pawnSelectionsComparator;
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     @Test
     public void create_computer_selection_with_four_pawns_and_list_of_rounds_with_given_size_when_game_starts() {
         //Given
@@ -34,6 +42,8 @@ public class GameShould {
         //Then
         assertThat(aGame.getComputerPawns()).hasSize(4);
         assertThat(aGame.getRounds().getMaxSize()).isEqualTo(numberOfRounds);
+        assertThat(aGame.getState()).isEqualTo(State.STARTED);
+        assertThat(aGame.getWinner()).isEqualTo(Winner.UNKNOWN);
     }
 
     @Test
@@ -70,7 +80,7 @@ public class GameShould {
     }
 
     @Test
-    public void add_last_winning_round_when_user_wins() throws PawnsSelectionUncompletedException, EmptyRoundListException {
+    public void add_last_winning_round_when_user_wins() throws PawnsSelectionUncompletedException, EmptyRoundListException, GameAlreadyFinishedException {
         //Given
         Game aGame;
         int numberOfRounds = 1;
@@ -85,10 +95,12 @@ public class GameShould {
         assertThat(lastRound.getUserPawns()).isEqualTo(aGame.getComputerPawns());
         assertThat(lastRound.getCorrectlyPlacedPawns()).isEqualTo(4);
         assertThat(lastRound.getMisplacedPawns()).isEqualTo(0);
+        assertThat(aGame.getState()).isEqualTo(State.FINISHED);
+        assertThat(aGame.getWinner()).isEqualTo(Winner.USER);
     }
 
     @Test
-    public void add_next_round_when_user_selection_is_not_valid() throws PawnsSelectionUncompletedException, EmptyRoundListException {
+    public void add_next_round_when_user_selection_is_not_valid() throws PawnsSelectionUncompletedException, EmptyRoundListException, GameAlreadyFinishedException {
         //Given
         Game aGame;
         int numberOfRounds = 2;
@@ -110,5 +122,53 @@ public class GameShould {
         assertThat(lastRound.getUserPawns()).isNotEqualTo(aGame.getComputerPawns());
         assertThat(lastRound.getCorrectlyPlacedPawns()).isEqualTo(2);
         assertThat(lastRound.getMisplacedPawns()).isEqualTo(2);
+        assertThat(aGame.getState()).isEqualTo(State.ONGOING);
+        assertThat(aGame.getWinner()).isEqualTo(Winner.UNKNOWN);
+        assertThat(aGame.getUserPawns().isEmpty()).isTrue();
+    }
+
+    @Test
+    public void set_computer_as_winner() throws PawnsSelectionUncompletedException, EmptyRoundListException, GameAlreadyFinishedException {
+        //Given
+        Game aGame;
+        int numberOfRounds = 1;
+        aGame = new Game(numberOfRounds);
+        aGame.getComputerPawns().forEach(pawn -> aGame.addUserPawn(pawn.getColor().next()));
+
+        Field pawnSelectionsComparatorField = ReflectionUtils.findField(Game.class, "pawnSelectionsComparator");
+        ReflectionUtils.makeAccessible(pawnSelectionsComparatorField);
+        ReflectionUtils.setField(pawnSelectionsComparatorField, aGame, this.pawnSelectionsComparator);
+        when(this.pawnSelectionsComparator.apply(any(), any()))
+                .thenReturn(new PawnSelectionsComparison(2, 2));
+
+
+        //When
+        aGame.finishRound();
+        Round lastRound = aGame.getRounds().getCurrentRound();
+
+        //Then
+        assertThat(lastRound.getUserPawns()).isNotEqualTo(aGame.getComputerPawns());
+        assertThat(lastRound.getCorrectlyPlacedPawns()).isEqualTo(2);
+        assertThat(lastRound.getMisplacedPawns()).isEqualTo(2);
+        assertThat(aGame.getState()).isEqualTo(State.FINISHED);
+        assertThat(aGame.getWinner()).isEqualTo(Winner.COMPUTER);
+    }
+
+    @Test
+    public void throw_exception_when_adding_round_and_game_is_finished() throws PawnsSelectionUncompletedException, GameAlreadyFinishedException {
+        //Given
+        Game aGame;
+        int numberOfRounds = 1;
+        aGame = new Game(numberOfRounds);
+        aGame.getComputerPawns().forEach(pawn -> aGame.addUserPawn(pawn.getColor().next()));
+        aGame.finishRound();
+
+        //When
+        aGame.getComputerPawns().forEach(pawn -> aGame.addUserPawn(pawn.getColor()));
+        thrown.expect(GameAlreadyFinishedException.class);
+        thrown.expectMessage("Game is over!");
+        aGame.finishRound();
+
+        //Then
     }
 }

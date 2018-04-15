@@ -1,16 +1,17 @@
 package com.domain;
 
+import com.Exception.GameAlreadyFinishedException;
 import com.Exception.PawnsSelectionUncompletedException;
 import com.comparator.PawnSelectionsComparator;
 import com.enums.Color;
+import com.enums.State;
+import com.enums.Winner;
 import com.validator.RoundValidator;
 import io.vavr.control.Validation;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import static io.vavr.API.*;
 
-@NoArgsConstructor
 class Game {
     @Getter
     private PawnsSelection computerPawns = new PawnsSelection();
@@ -18,6 +19,10 @@ class Game {
     private PawnsSelection userPawns = new PawnsSelection();
     @Getter
     private Rounds rounds;
+    @Getter
+    private State state = State.STARTED;
+    @Getter
+    private Winner winner = Winner.UNKNOWN;
     private RoundValidator roundValidator = new RoundValidator();
     private PawnSelectionsComparator pawnSelectionsComparator = new PawnSelectionsComparator();
 
@@ -35,14 +40,28 @@ class Game {
         userPawns.remove(index);
     }
 
-    void finishRound() throws PawnsSelectionUncompletedException {
+    void finishRound() throws PawnsSelectionUncompletedException, GameAlreadyFinishedException {
+        if (state == State.FINISHED)
+            throw new GameAlreadyFinishedException("Game is over!");
+
         Validation<String, String> validation = roundValidator.validateRound(computerPawns, userPawns);
 
         Match(validation).of(
-                Case($(Validation.valid("User wins!")), () -> run(() -> rounds.createNextRound(userPawns, 4, 0))),
+                Case($(Validation.valid("User wins!")), () -> run(() -> {
+                    rounds.createNextRound(userPawns, 4, 0);
+                    state = State.FINISHED;
+                    winner = Winner.USER;
+                })),
                 Case($(Validation.invalid("User selection does not match computer selection")), () -> run(() -> {
                     PawnSelectionsComparison apply = pawnSelectionsComparator.apply(computerPawns, userPawns);
                     rounds.createNextRound(userPawns, apply.getCorrectlyPlacedPawns(), apply.getMisplacedPawns());
+                    userPawns = new PawnsSelection();
+                    if (rounds.size() == rounds.getMaxSize()) {
+                        state = State.FINISHED;
+                        winner = Winner.COMPUTER;
+                    } else {
+                        state = State.ONGOING;
+                    }
                 }))
         );
     }
