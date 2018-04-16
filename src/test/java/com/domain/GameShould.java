@@ -49,9 +49,7 @@ public class GameShould {
     @Test
     public void add_pawn_to_user_pawns_with_given_color() {
         //Given
-        Game aGame;
-        int numberOfRounds = 1;
-        aGame = new Game(numberOfRounds);
+        Game aGame = new Game(1);
 
         //When
         aGame.addUserPawn(Color.ROUGE);
@@ -63,9 +61,7 @@ public class GameShould {
     @Test
     public void remove_pawn_at_given_index_from_user_pawns() {
         //Given
-        Game aGame;
-        int numberOfRounds = 1;
-        aGame = new Game(numberOfRounds);
+        Game aGame = new Game(1);
         Color aColor = Color.ROUGE;
         Color anotherColor = Color.BLEU;
         aGame.addUserPawn(aColor);
@@ -82,9 +78,7 @@ public class GameShould {
     @Test
     public void add_last_winning_round_when_user_wins() throws PawnsSelectionUncompletedException, EmptyRoundListException, GameAlreadyFinishedException {
         //Given
-        Game aGame;
-        int numberOfRounds = 1;
-        aGame = new Game(numberOfRounds);
+        Game aGame = new Game(1);
         aGame.getUserPawns().addAll(aGame.getComputerPawns());
 
         //When
@@ -102,9 +96,7 @@ public class GameShould {
     @Test
     public void add_next_round_when_user_selection_is_not_valid() throws PawnsSelectionUncompletedException, EmptyRoundListException, GameAlreadyFinishedException {
         //Given
-        Game aGame;
-        int numberOfRounds = 2;
-        aGame = new Game(numberOfRounds);
+        Game aGame = new Game(2);
         aGame.getComputerPawns().forEach(pawn -> aGame.addUserPawn(pawn.getColor().next()));
 
         Field pawnSelectionsComparatorField = ReflectionUtils.findField(Game.class, "pawnSelectionsComparator");
@@ -130,9 +122,7 @@ public class GameShould {
     @Test
     public void set_computer_as_winner() throws PawnsSelectionUncompletedException, EmptyRoundListException, GameAlreadyFinishedException {
         //Given
-        Game aGame;
-        int numberOfRounds = 1;
-        aGame = new Game(numberOfRounds);
+        Game aGame = new Game(1);
         aGame.getComputerPawns().forEach(pawn -> aGame.addUserPawn(pawn.getColor().next()));
 
         Field pawnSelectionsComparatorField = ReflectionUtils.findField(Game.class, "pawnSelectionsComparator");
@@ -157,9 +147,7 @@ public class GameShould {
     @Test
     public void throw_exception_when_adding_round_and_game_is_finished() throws PawnsSelectionUncompletedException, GameAlreadyFinishedException {
         //Given
-        Game aGame;
-        int numberOfRounds = 1;
-        aGame = new Game(numberOfRounds);
+        Game aGame = new Game(1);
         aGame.getComputerPawns().forEach(pawn -> aGame.addUserPawn(pawn.getColor().next()));
         aGame.finishRound();
 
