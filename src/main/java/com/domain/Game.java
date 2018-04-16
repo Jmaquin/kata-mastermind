@@ -1,6 +1,7 @@
 package com.domain;
 
 import com.Exception.GameAlreadyFinishedException;
+import com.Exception.PawnsSelectionAlreadyCompleteException;
 import com.Exception.PawnsSelectionUncompletedException;
 import com.comparator.PawnSelectionsComparator;
 import com.enums.Color;
