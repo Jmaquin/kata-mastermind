@@ -1,6 +1,7 @@
 package com.domain;
 
 import com.Exception.GameAlreadyFinishedException;
+import com.Exception.PawnsSelectionAlreadyCompleteException;
 import com.Exception.PawnsSelectionUncompletedException;
 import com.comparator.PawnSelectionsComparator;
 import com.enums.Color;
@@ -27,8 +28,10 @@ class Game {
         this.rounds = new Rounds(maxRounds);
     }
 
-    void addUserPawn(Color color) {
-        userPawns.add(new Pawn(color));
+    boolean addUserPawn(Color color) {
+        if (userPawns.size() == 4)
+            throw new PawnsSelectionAlreadyCompleteException("Pawns selection already complete!");
+        return userPawns.add(new Pawn(color));
     }
 
     void removeUserPawn(int index) {

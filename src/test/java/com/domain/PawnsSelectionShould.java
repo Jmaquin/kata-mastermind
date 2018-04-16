@@ -1,30 +1,39 @@
 package com.domain;
 
-import com.Exception.PawnsSelectionAlreadyCompleteException;
 import com.enums.Color;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class PawnsSelectionShould {
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
     @Test
-    public void throw_exception_when_add_and_size_is_four() {
+    public void return_false_when_add_and_size_is_four() {
         //Given
-        PawnsSelection userPawns = new PawnsSelection();
-        userPawns.add(new Pawn(Color.getRandomColor()));
-        userPawns.add(new Pawn(Color.getRandomColor()));
-        userPawns.add(new Pawn(Color.getRandomColor()));
-        userPawns.add(new Pawn(Color.getRandomColor()));
+        PawnsSelection aPawnSelection = new PawnsSelection();
+        aPawnSelection.add(new Pawn(Color.getRandomColor()));
+        aPawnSelection.add(new Pawn(Color.getRandomColor()));
+        aPawnSelection.add(new Pawn(Color.getRandomColor()));
+        aPawnSelection.add(new Pawn(Color.getRandomColor()));
 
         //When
-        thrown.expect(PawnsSelectionAlreadyCompleteException.class);
-        thrown.expectMessage("Pawns selection already complete!");
-        userPawns.add(new Pawn(Color.getRandomColor()));
+        boolean result = aPawnSelection.add(new Pawn(Color.getRandomColor()));
 
         //Then
+        assertThat(result).isFalse();
+        assertThat(aPawnSelection).hasSize(4);
+    }
+    
+    @Test
+    public void return_true_when_adding_and_size_is_not_four () {
+        //Given
+        PawnsSelection aPawnSelection = new PawnsSelection();
+
+        //When
+        boolean result = aPawnSelection.add(new Pawn(Color.getRandomColor()));
+
+        //Then
+        assertThat(result).isTrue();
+        assertThat(aPawnSelection).hasSize(1);
     }
 }
