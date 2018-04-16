@@ -159,4 +159,18 @@ public class GameShould {
 
         //Then
     }
+    
+    @Test
+    public void throw_exception_when_selection_is_not_complete () throws PawnsSelectionUncompletedException, GameAlreadyFinishedException {
+        //Given
+        Game aGame = new Game(1);
+        aGame.addUserPawn(Color.BLEU);
+
+        //When
+        thrown.expect(PawnsSelectionUncompletedException.class);
+        thrown.expectMessage("User selection is not complete");
+        aGame.finishRound();
+
+        //Then
+    }
 }
