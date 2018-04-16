@@ -58,4 +58,19 @@ public class RoundsShould {
         assertThat(result).isFalse();
         assertThat(aListOfRounds).hasSize(maxRounds);
     }
+    
+    @Test
+    public void return_true_when_round_is_added () {
+        //Given
+        int maxRounds = 1;
+        Rounds aListOfRounds = new Rounds(maxRounds);
+        PawnsSelection aUserPawnsList = new PawnsSelection();
+
+        //When
+        boolean result = aListOfRounds.createNextRound(aUserPawnsList, 0, 0);
+
+        //Then
+        assertThat(result).isTrue();
+        assertThat(aListOfRounds).hasSize(1);
+    }
 }
