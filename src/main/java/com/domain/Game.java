@@ -43,6 +43,8 @@ class Game {
     void finishRound() throws PawnsSelectionUncompletedException, GameAlreadyFinishedException {
         if (state == State.FINISHED)
             throw new GameAlreadyFinishedException("Game is over!");
+        if (userPawns.size() < 4)
+            throw new PawnsSelectionUncompletedException("User selection is not complete");
 
         Validation<String, String> validation = roundValidator.validateRound(computerPawns, userPawns);
 

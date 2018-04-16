@@ -5,18 +5,13 @@ import com.domain.Pawn;
 import com.domain.PawnsSelection;
 import com.enums.Color;
 import io.vavr.control.Validation;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class RoundValidatorShould {
 
     private RoundValidator roundValidator = new RoundValidator();
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void return_valid_when_user_find_correct_combination() throws PawnsSelectionUncompletedException {
@@ -54,24 +49,5 @@ public class RoundValidatorShould {
         //Then
         assertThat(result.isInvalid()).isEqualTo(true);
         assertThat(result.getError()).isEqualTo("User selection does not match computer selection");
-    }
-
-    @Test
-    public void throw_exception_when_user_combination_is_not_complete() throws PawnsSelectionUncompletedException {
-        //Given
-        PawnsSelection aComputerPawnList = new PawnsSelection();
-        aComputerPawnList.add(new Pawn(Color.getRandomColor()));
-        aComputerPawnList.add(new Pawn(Color.getRandomColor()));
-        aComputerPawnList.add(new Pawn(Color.getRandomColor()));
-        aComputerPawnList.add(new Pawn(Color.getRandomColor()));
-        PawnsSelection aNotCompleteUserCombination = new PawnsSelection();
-        aNotCompleteUserCombination.add(new Pawn(Color.ROUGE));
-
-        //When
-        thrown.expect(PawnsSelectionUncompletedException.class);
-        thrown.expectMessage("User selection is not complete");
-        roundValidator.validateRound(aComputerPawnList, aNotCompleteUserCombination);
-
-        //Then
     }
 }
