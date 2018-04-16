@@ -8,6 +8,5 @@ import lombok.Getter;
 @EqualsAndHashCode
 @AllArgsConstructor
 public class Pawn {
-    @Getter
-    private Color color;
+    @Getter private Color color;
 }
