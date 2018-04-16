@@ -23,4 +23,17 @@ public class PawnsSelectionShould {
         assertThat(result).isFalse();
         assertThat(aPawnSelection).hasSize(4);
     }
+    
+    @Test
+    public void return_true_when_adding_and_size_is_not_four () {
+        //Given
+        PawnsSelection aPawnSelection = new PawnsSelection();
+
+        //When
+        boolean result = aPawnSelection.add(new Pawn(Color.getRandomColor()));
+
+        //Then
+        assertThat(result).isTrue();
+        assertThat(aPawnSelection).hasSize(1);
+    }
 }
