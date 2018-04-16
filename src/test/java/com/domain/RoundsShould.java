@@ -1,7 +1,6 @@
 package com.domain;
 
 import com.Exception.EmptyRoundListException;
-import com.Exception.LastRoundReachedException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -45,7 +44,7 @@ public class RoundsShould {
     }
 
     @Test
-    public void throw_exception_when_last_round_is_reached() {
+    public void return_false_when_last_round_is_reached() {
         //Given
         int maxRounds = 1;
         Rounds aListOfRounds = new Rounds(maxRounds);
@@ -53,10 +52,10 @@ public class RoundsShould {
         aListOfRounds.createNextRound(aUserPawnsList, 0, 0);
 
         //When
-        thrown.expect(LastRoundReachedException.class);
-        thrown.expectMessage("Last round already reached!");
-        aListOfRounds.createNextRound(aUserPawnsList, 0, 0);
+        boolean result = aListOfRounds.createNextRound(aUserPawnsList, 0, 0);
 
         //Then
+        assertThat(result).isFalse();
+        assertThat(aListOfRounds).hasSize(maxRounds);
     }
 }
