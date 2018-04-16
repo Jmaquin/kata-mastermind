@@ -9,8 +9,7 @@ import java.util.ArrayList;
 
 @AllArgsConstructor
 public class Rounds extends ArrayList<Round> {
-    @Getter
-    private int maxSize;
+    @Getter private int maxSize;
 
     /**
      * Unckecked exception is thrown because we don't want to add more than maxSize elements and throw a checked exception is not possible when overriding add method
