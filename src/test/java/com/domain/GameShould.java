@@ -2,6 +2,7 @@ package com.domain;
 
 import com.Exception.EmptyRoundListException;
 import com.Exception.GameAlreadyFinishedException;
+import com.Exception.PawnsSelectionAlreadyCompleteException;
 import com.Exception.PawnsSelectionUncompletedException;
 import com.comparator.PawnSelectionsComparator;
 import com.enums.Color;
@@ -52,10 +53,28 @@ public class GameShould {
         Game aGame = new Game(1);
 
         //When
-        aGame.addUserPawn(Color.ROUGE);
+        boolean result = aGame.addUserPawn(Color.ROUGE);
 
         //Then
         assertThat(aGame.getUserPawns()).hasSize(1);
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    public void throw_exception_when_selection_is_already_complete () {
+        //Given
+        Game aGame = new Game(1);
+
+        //When
+        aGame.addUserPawn(Color.ROUGE);
+        aGame.addUserPawn(Color.ROUGE);
+        aGame.addUserPawn(Color.ROUGE);
+        aGame.addUserPawn(Color.ROUGE);
+        thrown.expect(PawnsSelectionAlreadyCompleteException.class);
+        thrown.expectMessage("Pawns selection already complete!");
+        aGame.addUserPawn(Color.ROUGE);
+
+        //Then
     }
 
     @Test
@@ -159,7 +178,7 @@ public class GameShould {
 
         //Then
     }
-    
+
     @Test
     public void throw_exception_when_selection_is_not_complete () throws PawnsSelectionUncompletedException, GameAlreadyFinishedException {
         //Given
