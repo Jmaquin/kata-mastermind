@@ -13,16 +13,11 @@ import lombok.Getter;
 import static io.vavr.API.*;
 
 class Game {
-    @Getter
-    private PawnsSelection computerPawns = new PawnsSelection();
-    @Getter
-    private PawnsSelection userPawns = new PawnsSelection();
-    @Getter
-    private Rounds rounds;
-    @Getter
-    private State state = State.STARTED;
-    @Getter
-    private Winner winner = Winner.UNKNOWN;
+    @Getter private PawnsSelection computerPawns = new PawnsSelection();
+    @Getter private PawnsSelection userPawns = new PawnsSelection();
+    @Getter private Rounds rounds;
+    @Getter private State state = State.STARTED;
+    @Getter private Winner winner = Winner.UNKNOWN;
     private RoundValidator roundValidator = new RoundValidator();
     private PawnSelectionsComparator pawnSelectionsComparator = new PawnSelectionsComparator();
 
