@@ -5,10 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 class Round {
-    @Getter
-    private PawnsSelection userPawns;
-    @Getter
-    private int correctlyPlacedPawns;
-    @Getter
-    private int misplacedPawns;
+    @Getter private PawnsSelection userPawns;
+    @Getter private int correctlyPlacedPawns;
+    @Getter private int misplacedPawns;
 }
